@@ -2,7 +2,7 @@ class Question {
   String questionText;
   bool questionAnswer;
 
-  Question({this.questionText, this.questionAnswer});
+  Question(this.questionText, this.questionAnswer);
 
   String get text => questionText;
   set text(String text) => questionText = text;
