@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/questionBrain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 
@@ -30,21 +31,41 @@ class _QuizPageState extends State<QuizPage> {
 
   QuestionBrain questionbrain = new QuestionBrain();
 
-  void checkAnswer(bool selectedAnswer) {
+  void checkAnswer(bool selectedAnswer, BuildContext context) {
+    if (!questionbrain.isLastQuestion) {
+      setState(() {
+        if (selectedAnswer == questionbrain.getAnswer()) {
+          scoreKeeper.add(Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          scoreKeeper.add(Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+        }
+        questionbrain.nextQuestion();
+      });
+    } else {
+      showModal(context);
+      resetQuiz();
+    }
+  }
+
+  void resetQuiz() {
     setState(() {
-      if (selectedAnswer == questionbrain.getAnswer()) {
-        scoreKeeper.add(Icon(
-          Icons.check,
-          color: Colors.green,
-        ));
-      } else {
-        scoreKeeper.add(Icon(
-          Icons.close,
-          color: Colors.red,
-        ));
-      }
-      questionbrain.nextQuestion();
+      scoreKeeper.clear();
+      questionbrain.resetQuestion();
     });
+  }
+
+  void showModal(BuildContext context) {
+    Alert(
+            context: context,
+            title: "Finished!",
+            desc: "You've reached the end of the quiz.")
+        .show();
   }
 
   @override
@@ -83,7 +104,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                checkAnswer(true);
+                checkAnswer(true, context);
               },
             ),
           ),
@@ -101,7 +122,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                checkAnswer(false);
+                checkAnswer(false, context);
               },
             ),
           ),
