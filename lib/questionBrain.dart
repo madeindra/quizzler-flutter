@@ -36,7 +36,11 @@ class QuestionBrain {
     }
   }
 
-  int get getTotal => _questionBank.length;
+  void resetQuestion() {
+    _index = 0;
+  }
+
+  bool get isLastQuestion => _index == _questionBank.length - 1;
   String getQuestion() => _questionBank[_index].questionText;
   bool getAnswer() => _questionBank[_index].questionAnswer;
 }
